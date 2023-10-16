@@ -46,7 +46,7 @@
     });
     $(document).on( "keypress ", function(e) {
         var display = $(".overlay").css("display")
-        if(e.key != "r" || display != "none") return;
+        if((e.key != "r" && e.key != "R") || display != "none") return;
         var rand = Math.floor(Math.random()*30);
         $('.card').eq(rand).click()
     });
