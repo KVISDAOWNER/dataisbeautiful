@@ -12,8 +12,8 @@
 <script>
     let clickedCardId;
     let allObjects;
-    let ageFilteredObjects;
-    let categoryFilteredObjects;
+    let sortByTime;
+    let sortByCategory;
 
     $(document).ready(function() {
         $("#search").click(function(e){
@@ -41,18 +41,15 @@
         });
 
         $('#time-sort').on("change", function() {
-            ageFilteredObjects = allObjects.filter(o => +o.Age <= +this.value);
-            renderGrid(ageFilteredObjects);
+            sortByTime = +this.value;
+            renderGrid(filterObjects(allObjects));
         });
         $('#category-sort').on("change", function() {
-            console.log(this.value);
-            if(this.value === "all-categories") {
-                renderGrid(ageFilteredObjects);
-                return;
-            }
-            console.log(this.value);
-            var categoryFilteredObjects = allObjects.filter(o => o.Categories?.some(c => c === this.value) );
-            renderGrid(categoryFilteredObjects);
+            if(this.value == "all-categories")
+                sortByCategory = null;
+            else
+                sortByCategory = this.value;
+            renderGrid(filterObjects(allObjects));
         });
 
         $.ajax({
@@ -76,8 +73,12 @@
         });
     }
 
+    function filterObjects(objects){
+        return allObjects.filter(o => (sortByTime == null || +o.Age <= sortByTime) && (sortByCategory == null || o.Categories?.some(c => c === sortByCategory)));
+    }
+
     function renderGrid(objects){
-            $('.grid').html(objects.map(toHtml));
+        $('.grid').html(objects.map(toHtml));
     }
 
 
