@@ -11,6 +11,9 @@
 
 <script>
     let clickedCardId;
+    let allObjects;
+    let ageFilteredObjects;
+    let categoryFilteredObjects;
 
     $(document).ready(function() {
         $("#search").click(function(e){
@@ -35,8 +38,23 @@
                 $(".overlay").trigger("click");
                 $("#card-" + (currentCardNumb+1)).trigger("click");
             }
-
         });
+
+        $('#time-sort').on("change", function() {
+            ageFilteredObjects = allObjects.filter(o => +o.Age <= +this.value);
+            renderGrid(ageFilteredObjects);
+        });
+        $('#category-sort').on("change", function() {
+            console.log(this.value);
+            if(this.value === "all-categories") {
+                renderGrid(ageFilteredObjects);
+                return;
+            }
+            console.log(this.value);
+            var categoryFilteredObjects = allObjects.filter(o => o.Categories?.some(c => c === this.value) );
+            renderGrid(categoryFilteredObjects);
+        });
+
         $.ajax({
             type: "GET",
             url: "data.json",
@@ -44,18 +62,37 @@
             success: function(data) {processData(data);}
         });
     });
-    $(document).on( "keypress ", function(e) {
+
+    function processData(allText) {
+        const obj = JSON.parse(allText);
+        allObjects = obj
+        .filter(o => o.Title != null && o.Image != null && o.Age != null && o.Upvotes != null && o.Comments != null &&  o.Url != null )
+        ageFilteredObjects = allObjects;
+        categoryFilteredObjects = allObjects;
+
+        sleep(1500).then(() => {
+            // Do something after the sleep!
+            renderGrid(allObjects);
+        });
+    }
+
+    function renderGrid(objects){
+            $('.grid').html(objects.map(toHtml));
+    }
+
+
+    $(document).on("keypress", function(e) {
         var display = $(".overlay").css("display")
         if((e.key != "r" && e.key != "R") || display != "none") return;
         var rand = Math.floor(Math.random()*30);
         $('.card').eq(rand).click()
     });
 
-    $(document).on( "keydown ", function(e) {
+    $(document).on("keydown", function(e) {
         if(e.key === "Escape")
         $(".overlay").trigger("click");
     });
-    $(document).on( "keydown ", function(e) {
+    $(document).on("keydown", function(e) {
         var display = $(".overlay").css("display")
         if(display == "none") return;
 
@@ -97,18 +134,6 @@
     });
 
 
-    function processData(allText) {
-        const obj = JSON.parse(allText);
-        objects = obj
-        .filter(o => o.Title != null && o.Image != null && o.Age != null && o.Upvotes != null && o.Comments != null &&  o.Url != null )
-        .map(toHtml);
-
-        sleep(1500).then(() => {
-            // Do something after the sleep!
-            $( document ).ready(function() {
-            $('.grid').html(objects);
-        });});
-    }
 
     // sleep time expects milliseconds
     function sleep (time) {
@@ -178,12 +203,11 @@
             <div class="sort">
                 <div id="sort-by">SORT BY:</div>
                 <select id="time-sort" class="border">
-                    <option class="all-time">All Time</option>
-                    <option class="past-5-years">Past 5 years</option>
-                    <option class="past-3-years">Past 3 years</option>
-                    <option class="past-1-years">Past 1 years</option>
-                    <option class="past-month">Past month</option>
-                    <option class="past-week">Past week</option>
+                    <option value="99999">All Time</option>
+                    <option value="1095">Past 3 years</option>
+                    <option value="365">Past 1 years</option>
+                    <option value="30">Past month</option>
+                    <option value="7">Past week</option>
                 </select>
                 <select  id="category-sort" class="border">
                     <option value="all-categories">All Categories</option>
@@ -191,14 +215,14 @@
                     <option value="technology">Technology</option>
                     <option value="technology">Economy</option>
                     <option value="social-media">Social Media</option>
-                    <option value="social-media">NSFW</option>
-                    <option value="social-media">Countries</option>
-                    <option value="social-media">Games</option>
-                    <option value="social-media">TV</option>
-                    <option value="social-media">Demographics</option>
-                    <option value="social-media">Maps</option>
-                    <option value="technology">Election</option>
-                    <option value="social-media">Other</option>
+                    <option value="nsfw">NSFW</option>
+                    <option value="countries">Countries</option>
+                    <option value="games">Games</option>
+                    <option value="tv">TV</option>
+                    <option value="demographics">Demographics</option>
+                    <option value="maps">Maps</option>
+                    <option value="election">Election</option>
+                    <option value="other">Other</option>
                 </select >
                 <!-- <div id="search" class="border">
                     <svg id="search-icon"fill="none" xmlns="http://www.w3.org/2000/svg">
