@@ -54,8 +54,7 @@
 
         $.ajax({
             type: "GET",
-            url: "data.json",
-            dataType: "text",
+            url: "https://dataisbeautiful.azurewebsites.net/data",
             success: function(data) {processData(data);}
         });
     });
