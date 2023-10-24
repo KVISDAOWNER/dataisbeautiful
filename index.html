@@ -60,16 +60,17 @@
     });
 
     function processData(allText) {
+        sleep(1500).then(() => {
+            // Do something after the sleep!
+            renderGrid(allObjects);
+        });
         const obj = JSON.parse(allText);
         allObjects = obj
         .filter(o => o.Title != null && o.Image != null && o.Age != null && o.Upvotes != null && o.Comments != null &&  o.Url != null )
         ageFilteredObjects = allObjects;
         categoryFilteredObjects = allObjects;
 
-        sleep(1500).then(() => {
-            // Do something after the sleep!
-            renderGrid(allObjects);
-        });
+
     }
 
     function filterObjects(objects){
