@@ -66,11 +66,9 @@
         });
         const obj = JSON.parse(allText);
         allObjects = obj
-        .filter(o => o.Title != null && o.Image != null && o.Age != null && o.Upvotes != null && o.Comments != null &&  o.Url != null )
+        .filter(o => o.Title != null && o.Image != null  && o.Upvotes != null && o.Comments != null &&  o.Url != null )
         ageFilteredObjects = allObjects;
         categoryFilteredObjects = allObjects;
-
-
     }
 
     function filterObjects(objects){
