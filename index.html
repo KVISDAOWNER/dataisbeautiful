@@ -6,7 +6,6 @@
     <title>DataIsBeautiful</title>
     <script src="code.jquery.com_jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <script>
@@ -67,12 +66,13 @@
         const obj = JSON.parse(allText);
         allObjects = obj
         .filter(o => o.Title != null && o.Image != null  && o.Upvotes != null && o.Comments != null &&  o.Url != null )
+        .sort(s => s.Upvotes)
         ageFilteredObjects = allObjects;
         categoryFilteredObjects = allObjects;
     }
 
     function filterObjects(objects){
-        return allObjects.filter(o => (sortByTime == null || +o.Age <= sortByTime) && (sortByCategory == null || o.Categories?.some(c => c === sortByCategory)));
+        return allObjects.filter(o => (sortByTime == null || +o.AgeUtc <= sortByTime) && (sortByCategory == null || o.Categories?.some(c => c === sortByCategory)));
     }
 
     function renderGrid(objects){
