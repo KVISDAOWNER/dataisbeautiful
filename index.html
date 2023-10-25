@@ -66,7 +66,7 @@
         const obj = JSON.parse(allText);
         allObjects = obj
         .filter(o => o.Title != null && o.Image != null  && o.Upvotes != null && o.Comments != null &&  o.Url != null )
-        .sort(s => s.Upvotes)
+        .sort((s1, s2) => s2.Upvotes - s1.Upvotes)
         ageFilteredObjects = allObjects;
         categoryFilteredObjects = allObjects;
     }
